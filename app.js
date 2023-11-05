@@ -85,10 +85,11 @@ app.get("*", (request, response) => {
       if (fs.lstatSync(filePath).isFile()) {
         const bytes = fs.readFileSync(filePath);
 
-        if (filePath.endsWith(".js")) response.send(bytes.toString().replace("API_BASE_URL", env.BASE_URL));
+        if (filePath.endsWith(".js")) response.send(bytes.toString().replaceAll("%API_BASE_URL%", env.BASE_URL));
         else response.send(bytes);
+
+        return;
       }
-      return;
     }
   }
 
