@@ -1,0 +1,172 @@
+/* Language picker */
+
+.language-picker {
+    font-family: "proxima-nova","Helvetica Neue",Helvetica,Arial,sans-serif;
+    font-family: omnes-pro;
+    font-size: 1rem;
+    font-size: 1.1rem;
+    font-style: normal;
+    font-weight: 600;
+    font-weight: 500;
+    letter-spacing: 0em;
+    line-height: 1.2em;
+    line-height: 1.6em;
+    text-transform: none
+}
+
+@media screen and (max-width: 767px ) and (orientation: portrait) {
+    .language-picker {
+        font-size:calc((1.1 - 1) * calc(.012 * min(100vh, 900px)) + 1rem)
+    }
+}
+
+@media screen and (min-width: 768px ),screen and (max-width:calc(1512px - 1px)) and (orientation:landscape) {
+    .language-picker {
+        font-size:calc((1.1 - 1) * 1.2vw + 1rem)
+    }
+}
+
+@media screen and (min-width: 1512px) {
+    .language-picker {
+        font-size:calc(1.1 * 1rem)
+    }
+}
+
+.header-actions .language-picker-desktop {
+    margin: 0 0 0 2vw;
+    position: relative
+}
+
+.header-actions .language-picker-desktop .icon,
+.header-actions .language-picker-desktop .flag {
+    margin-right: 8px
+}
+
+.header-actions .language-picker-desktop .icon {
+    height: 20px;
+    width: 20px
+}
+
+.header-actions .language-picker-desktop .flag {
+    height: 20px;
+    width: 20px
+}
+
+.header-actions .language-picker-desktop .chevron {
+    margin-bottom: 1px;
+    margin-left: 2px
+}
+
+.header-actions .language-picker-desktop .current-language {
+    cursor: pointer;
+    padding: .1em 0
+}
+
+.header-actions .language-picker-desktop .language-picker-content {
+    left: -1em;
+    min-width: 200px;
+    min-width: 110px;
+    opacity: 0;
+    padding: .5em 1em;
+    pointer-events: none;
+    position: absolute;
+    text-align: left;
+    top: auto;
+    z-index: 10
+}
+
+.header-actions .language-picker-desktop .language-picker-content .language-item {
+    line-height: 1.3
+}
+
+.header-actions .language-picker-desktop .language-picker-content .language-item .flag {
+    margin-bottom: 3px;
+    margin-top: 3px
+}
+
+.header-actions .language-picker-desktop .language-picker-content .language-item a * {
+    pointer-events: none
+}
+
+.header-actions .language-picker-desktop:hover .language-picker-content,
+.header-actions .language-picker-desktop .language-picker-content.focus-within {
+    opacity: 1;
+    pointer-events: auto
+}
+
+.header-actions .language-picker-desktop .language-picker-content:focus-within {
+    opacity: 1;
+    pointer-events: auto
+}
+
+.header .language-picker .icon {
+    flex-shrink: 0;
+    line-height: 0
+}
+
+.header .language-picker .current-language {
+    align-items: center;
+    display: flex
+}
+
+.header .language-picker .current-language-name {
+    margin-right: 8px
+}
+
+.header .language-picker img:not([src]) {
+    visibility: hidden
+}
+
+.header .language-picker-content a {
+    align-items: center;
+    display: flex
+}
+
+.header .language-picker-mobile .icon,
+.header #multilingual-language-picker-mobile .icon,
+.header .language-picker-mobile .flag,
+.header #multilingual-language-picker-mobile .flag {
+    display: inline-block;
+    margin: 0 16px 0 8px
+}
+
+.header .language-picker-mobile .chevron {
+    margin-top: 2px
+}
+
+.header-actions--right .language-picker-desktop .language-picker-content {
+    left: auto;
+    right: -1em
+}
+
+:not(.header--menu-open) .header-nav-folder-content,
+:not(.header--menu-open) .language-picker-content {
+    background-color: var(--siteBackgroundColor)
+}
+
+.header .header-nav-wrapper a,
+.header .language-item a {
+    backface-visibility: hidden;
+    padding: .1em 0;
+    text-decoration: none
+}
+
+.header-menu .language-picker {
+    font-size: 8.5vmin
+}
+
+@media screen and (min-width: 576px ) {
+    .header-menu .language-picker {
+        font-size:6.6vmin
+    }
+}
+
+@media screen and (min-width: 768px ) {
+    .header-menu .language-picker {
+        font-size:6vmin
+    }
+}
+
+.header--menu-open .header .language-picker-content {
+    background-color: var(--menuOverlayBackgroundColor);
+}
