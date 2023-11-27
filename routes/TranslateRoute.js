@@ -43,7 +43,7 @@ class TranslateRoute extends ApiRoute {
     let index = 0;
 
     for (let text of texts) {
-      const cacheResult = this.getFromCache(text, sourceLang, targetLang);
+      const cacheResult = this.getFromCache(text, sourceLang, targetLang, formality);
 
       if (cacheResult) translatedTexts[index] = cacheResult;
       else {
@@ -73,7 +73,7 @@ class TranslateRoute extends ApiRoute {
         let translationIndex = 0;
 
         for (let translation of response.data.translations) {
-          this.saveInCache(textsToTranslate[translationIndex], sourceLang, targetLang, translation.text);
+          this.saveInCache(textsToTranslate[translationIndex], sourceLang, targetLang, formality, translation.text);
 
           translatedTexts[translationIndexMap[translationIndex]] = translation.text;
           translationIndex++;
@@ -119,18 +119,14 @@ class TranslateRoute extends ApiRoute {
   }
 
   saveInCache(text, sourceLang, targetLang, formality, translatedText) {
-    const key = `${sourceLang}/${formality}`;
-    const sourceLangCache = this.#cache[key];
+    this.saveTranslationInCache(`${sourceLang}/${formality}`, targetLang, text, translatedText);
+    this.saveTranslationInCache(`${targetLang}/${formality}`, sourceLang, translatedText, text);
+  }
 
-    if (!sourceLangCache) this.#cache[key] = {};
-
-    const textCache = this.#cache[key][text];
-
-    if (!textCache) this.#cache[key][text] = {};
-
-    const targetLangCache = this.#cache[key][text][targetLang];
-
-    if (!targetLangCache) this.#cache[key][text][targetLang] = translatedText;
+  saveTranslationInCache(key, translationLang, text, translatedText) {
+    if (!this.#cache[key]) this.#cache[key] = {};
+    if (!this.#cache[key][text]) this.#cache[key][text] = {};
+    if (!this.#cache[key][text][translationLang]) this.#cache[key][text][translationLang] = translatedText;
   }
 }
 
