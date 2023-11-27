@@ -14,6 +14,7 @@ const languages = [
 ];
 const defaultLanguage = document.currentScript.getAttribute("default-lang") ?? languages[0].name;
 const sourceLanguage = document.currentScript.getAttribute("source-lang") ?? defaultLanguage;
+const formality = document.currentScript.getAttribute("formality") ?? "default";
 const currentLanguageName = (localStorage.getItem("lang") ?? (navigator.language || navigator.userLanguage) ?? defaultLanguage)
   .toUpperCase()
   .split("-")[0];
@@ -30,73 +31,81 @@ if (currentLanguage != null) {
     else document.querySelector(".header-actions--right").appendChild(desktopLanguageSelector);
 
     desktopLanguageSelector.outerHTML = `
-            <div class="language-picker language-picker-desktop" id="multilingual-language-picker-desktop">
-                <div class="current-language">
-                    <img class="flag" data-alt-text="Flag Symbol" src="${API_BASE_URL}/${currentLanguage.iconName}.svg" alt="${currentLanguage.displayName} Flag Symbol">
-                    <span class="current-language-name">${currentLanguage.displayName}</span>
-                    <span class="chevron chevron--down">
-                    </span>
+      <div class="language-picker language-picker-desktop" id="multilingual-language-picker-desktop">
+        <div class="current-language">
+          <img 
+            class="flag" 
+            data-alt-text="Flag Symbol" 
+            src="${API_BASE_URL}/${currentLanguage.iconName}.svg" 
+            alt="${currentLanguage.displayName} Flag Symbol"
+          />
+          <span class="current-language-name">${currentLanguage.displayName}</span>
+          <span class="chevron chevron--down"></span>
+        </div>
+        <div class="language-picker-content">
+          ${languages
+            .map(
+              (languageObject) => `
+                <div class="language-item">
+                  <a href="#" data-lang-name="${languageObject.name}">
+                    <img
+                      class="flag icon--lg"
+                      src="${API_BASE_URL}/${languageObject.iconName}.svg"
+                      alt="${languageObject.displayName} Flag Symbol"
+                    />
+                    <span>${languageObject.displayName}</span>
+                  </a>
                 </div>
-                <div class="language-picker-content">
-                    ${languages
-                      .map(
-                        (languageObject) => `
-                                <div class="language-item">
-                                    <a href="#" data-lang-name="${languageObject.name}">
-                                        <img class="flag icon--lg" src="${API_BASE_URL}/${languageObject.iconName}.svg" alt="${languageObject.displayName} Flag Symbol">
-                                        <span>${languageObject.displayName}</span>
-                                    </a>
-                                </div>
-                            `
-                      )
-                      .join("")}
-                </div>
-            </div>
-        `;
+              `
+            )
+            .join("")}
+        </div>
+      </div>
+    `;
 
     // mobile language selector
     let mobileLanguageSelector = document.createElement("div");
     document.querySelector(".header-menu-nav .header-menu-nav-folder").appendChild(mobileLanguageSelector);
     mobileLanguageSelector.outerHTML = `
-            <div class="header-menu-actions language-picker language-picker-mobile">
-                <a data-folder-id="language-picker" href="#">
-                    <div class="header-menu-nav-item-content current-language">
-                        <img class="flag icon--lg" src="${API_BASE_URL}/${currentLanguage.iconName}.svg" alt="${currentLanguage.displayName} Flag Symbol">
-                        <span class="current-language-name">${currentLanguage.displayName}</span>
-                        <span class="chevron chevron--right"></span>
-                    </div>
-                </a>
-            </div>
-        `;
+      <div class="header-menu-actions language-picker language-picker-mobile">
+        <a data-folder-id="language-picker" href="#">
+          <div class="header-menu-nav-item-content current-language">
+            <img class="flag icon--lg" src="${API_BASE_URL}/${currentLanguage.iconName}.svg" alt="${currentLanguage.displayName} Flag Symbol">
+            <span class="current-language-name">${currentLanguage.displayName}</span>
+            <span class="chevron chevron--right"></span>
+          </div>
+        </a>
+      </div>
+    `;
 
     let mobileLanguageSelectorPicker = document.createElement("div");
     document.querySelector(".header-menu-nav .header-menu-nav-list").appendChild(mobileLanguageSelectorPicker);
     mobileLanguageSelectorPicker.outerHTML = `
-            <div id="multilingual-language-picker-mobile" class="header-menu-nav-folder" data-folder="language-picker">
-                <div class="header-menu-nav-folder-content">
-                    <div class="header-menu-controls header-menu-nav-item">
-                        <a class="header-menu-controls-control header-menu-controls-control--active" data-action="back" href="/" tabindex="0">
-                            <span class="chevron chevron--left"></span>
-                            <span>Zurück</span>
-                        </a>
-                    </div>
-                    <div class="language-picker-content">
-                        ${languages
-                          .map(
-                            (languageObject) => `
-                                    <div class="header-menu-nav-item">
-                                        <a href="#" tabindex="0" data-lang-name="${languageObject.name}">
-                                            <img class="flag icon--lg" src="${API_BASE_URL}/${languageObject.iconName}.svg" alt="${languageObject.displayName} Flag Symbol">
-                                            <span>${languageObject.displayName}</span>
-                                        </a>
-                                    </div>
-                                `
-                          )
-                          .join("")}
-                    </div>
-                </div>
-            </div>
-        `;
+      <div id="multilingual-language-picker-mobile" class="header-menu-nav-folder" data-folder="language-picker">
+        <div class="header-menu-nav-folder-content">
+          <div class="header-menu-controls header-menu-nav-item">
+            <a class="header-menu-controls-control header-menu-controls-control--active" data-action="back" href="/" tabindex="0">
+                <span class="chevron chevron--left"></span>
+                <span>Zurück</span>
+            </a>
+          </div>
+          <div class="language-picker-content">
+            ${languages
+              .map(
+                (languageObject) => `
+                  <div class="header-menu-nav-item">
+                    <a href="#" tabindex="0" data-lang-name="${languageObject.name}">
+                      <img class="flag icon--lg" src="${API_BASE_URL}/${languageObject.iconName}.svg" alt="${languageObject.displayName} Flag Symbol">
+                      <span>${languageObject.displayName}</span>
+                    </a>
+                  </div>
+                `
+              )
+              .join("")}
+          </div>
+        </div>
+      </div>
+    `;
 
     // register event listeners
     setTimeout(() => {
@@ -164,7 +173,8 @@ if (currentLanguage != null) {
         body: JSON.stringify({
           sourceLang: sourceLanguage,
           targetLang: currentLanguageName,
-          texts: nodesToTranslate.map((node) => node.textContent)
+          texts: nodesToTranslate.map((node) => node.textContent),
+          formality
         })
       })
         .then((response) => response.json())
