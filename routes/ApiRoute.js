@@ -1,23 +1,23 @@
 class ApiRoute {
-    #method;
-    #path;
+  #method;
+  #path;
 
-    constructor(method, path) {
-        this.#method = method;
-        this.#path = path;
-    }
+  constructor(method, path) {
+    this.#method = method;
+    this.#path = path;
+  }
 
-    getMethod() {
-        return this.#method;
-    }
+  getMethod() {
+    return this.#method;
+  }
 
-    getPath() {
-        return this.#path;
-    }
+  getPath() {
+    return this.#path;
+  }
 
-    async handleRequest(request) {
-        throw new Error("Method 'handleRequest' is not implemented!");
-    }
+  async handleRequest(request) {
+    throw new Error("Method 'handleRequest' is not implemented!");
+  }
 }
 
 module.exports = ApiRoute;

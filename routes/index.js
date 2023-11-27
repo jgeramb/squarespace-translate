@@ -1,5 +1,3 @@
-const TranslateRoute = require('./TranslateRoute');
+const TranslateRoute = require("./TranslateRoute");
 
-module.exports = [
-    new TranslateRoute()
-]
+module.exports = [new TranslateRoute()];

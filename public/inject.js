@@ -33,8 +33,8 @@ if (currentLanguage != null) {
             <div class="language-picker language-picker-desktop" id="multilingual-language-picker-desktop">
                 <div class="current-language">
                     <img class="flag" data-alt-text="Flag Symbol" src="${API_BASE_URL}/${currentLanguage.iconName}.svg" alt="${
-      currentLanguage.displayName
-    } Flag Symbol">
+                      currentLanguage.displayName
+                    } Flag Symbol">
                     <span class="current-language-name">${currentLanguage.displayName}</span>
                     <span class="chevron chevron--down">
                     </span>
