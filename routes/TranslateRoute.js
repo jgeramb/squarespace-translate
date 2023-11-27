@@ -115,7 +115,7 @@ class TranslateRoute extends ApiRoute {
 
     if (!textCache) return null;
 
-    return textCache[`${targetLang}/${formality}`] ?? null;
+    return textCache[targetLang] ?? null;
   }
 
   saveInCache(text, sourceLang, targetLang, formality, translatedText) {
