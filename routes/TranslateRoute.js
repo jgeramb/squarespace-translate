@@ -31,19 +31,20 @@ class TranslateRoute extends ApiRoute {
         request.body.texts,
         request.body.sourceLang,
         request.body.targetLang,
-        request.body.formality ?? "default"
+        request.body.formality ?? "default",
+        request.body.glossaryId ?? ""
       )
     };
   }
 
-  async translateTexts(texts, sourceLang, targetLang, formality) {
+  async translateTexts(texts, sourceLang, targetLang, formality, glossaryId) {
     const translatedTexts = {};
     const translationIndexMap = {};
     const textsToTranslate = [];
     let index = 0;
 
     for (let text of texts) {
-      const cacheResult = this.getFromCache(text, sourceLang, targetLang, formality);
+      const cacheResult = this.getFromCache(text, sourceLang, targetLang, formality, glossaryId);
 
       if (cacheResult) translatedTexts[index] = cacheResult;
       else {
@@ -61,7 +62,9 @@ class TranslateRoute extends ApiRoute {
         const response = await axios.post(
           "https://api-free.deepl.com/v2/translate",
           textsToTranslate.map((text) => "text=" + encodeURIComponent(text)).join("&") +
-            `&source_lang=${sourceLang}&target_lang=${targetLang}&formality=${formality}`,
+            `&source_lang=${sourceLang}&target_lang=${targetLang}&formality=${formality}${
+              glossaryId.length > 0 ? `&glossary_id=${glossaryId}` : ""
+            }`,
           {
             headers: {
               Authorization: "DeepL-Auth-Key " + env.parsed.DEEPL_API_KEY,
@@ -73,7 +76,7 @@ class TranslateRoute extends ApiRoute {
         let translationIndex = 0;
 
         for (let translation of response.data.translations) {
-          this.saveInCache(textsToTranslate[translationIndex], sourceLang, targetLang, formality, translation.text);
+          this.saveInCache(textsToTranslate[translationIndex], sourceLang, targetLang, formality, glossaryId, translation.text);
 
           translatedTexts[translationIndexMap[translationIndex]] = translation.text;
           translationIndex++;
@@ -106,8 +109,8 @@ class TranslateRoute extends ApiRoute {
       .map((index) => translatedTexts[index]);
   }
 
-  getFromCache(text, sourceLang, targetLang, formality) {
-    const sourceLangCache = this.#cache[`${sourceLang}/${formality}`];
+  getFromCache(text, sourceLang, targetLang, formality, glossary) {
+    const sourceLangCache = this.#cache[glossary.length > 0 ? glossary : "default"][`${sourceLang}/${formality}`];
 
     if (!sourceLangCache) return null;
 
@@ -118,15 +121,16 @@ class TranslateRoute extends ApiRoute {
     return textCache[targetLang] ?? null;
   }
 
-  saveInCache(text, sourceLang, targetLang, formality, translatedText) {
-    this.saveTranslationInCache(`${sourceLang}/${formality}`, targetLang, text, translatedText);
-    this.saveTranslationInCache(`${targetLang}/${formality}`, sourceLang, translatedText, text);
+  saveInCache(text, sourceLang, targetLang, formality, glossary, translatedText) {
+    this.saveTranslationInCache(glossary, `${sourceLang}/${formality}`, targetLang, text, translatedText);
+    this.saveTranslationInCache(glossary, `${targetLang}/${formality}`, sourceLang, translatedText, text);
   }
 
-  saveTranslationInCache(key, translationLang, text, translatedText) {
-    if (!this.#cache[key]) this.#cache[key] = {};
-    if (!this.#cache[key][text]) this.#cache[key][text] = {};
-    if (!this.#cache[key][text][translationLang]) this.#cache[key][text][translationLang] = translatedText;
+  saveTranslationInCache(glossary, key, translationLang, text, translatedText) {
+    if (!this.#cache[glossary]) this.#cache[glossary] = {};
+    if (!this.#cache[glossary][key]) this.#cache[glossary][key] = {};
+    if (!this.#cache[glossary][key][text]) this.#cache[glossary][key][text] = {};
+    if (!this.#cache[glossary][key][text][translationLang]) this.#cache[glossary][key][text][translationLang] = translatedText;
   }
 }
 

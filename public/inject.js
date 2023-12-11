@@ -15,6 +15,7 @@ const languages = [
 const defaultLanguage = document.currentScript.getAttribute("default-lang") ?? languages[0].name;
 const sourceLanguage = document.currentScript.getAttribute("source-lang") ?? defaultLanguage;
 const formality = document.currentScript.getAttribute("formality") ?? "default";
+const glossaryId = document.currentScript.getAttribute("glossary-id") ?? "";
 const currentLanguageName = (localStorage.getItem("lang") ?? (navigator.language || navigator.userLanguage) ?? defaultLanguage)
   .toUpperCase()
   .split("-")[0];
@@ -174,7 +175,8 @@ if (currentLanguage != null) {
           sourceLang: sourceLanguage,
           targetLang: currentLanguageName,
           texts: nodesToTranslate.map((node) => node.textContent),
-          formality
+          formality,
+          glossaryId
         })
       })
         .then((response) => response.json())
